@@ -1,7 +1,8 @@
-.PHONY : all clean help settings
+.PHONY : all results clean help settings
 
 COUNT=bin/countwords.py
 DATA=$(wildcard data/*.txt)
+SUMMARY=bin/book_summary.sh
 RESULTS=$(patsubst data/%.txt,results/%.csv,$(DATA))
 COLLATE=bin/collate.py
 PLOT=bin/plotcounts.py
@@ -18,8 +19,13 @@ results/collated.csv : $(RESULTS) $(COLLATE)
 	mkdir -p results
 	python $(COLLATE) $(RESULTS) > $@ 
 
+## results : regenerate result for all books.
+results : $(RESULTS)
+
 ## results/%.csv : regenerate result for any book.
 results/%.csv : data/%.txt $(COUNT)
+	@bash $(SUMMARY) $< Title
+	@bash $(SUMMARY) $< Author
 	python $(COUNT) $< > $@
 
 ## clean : remove all generated files.
@@ -30,6 +36,7 @@ clean :
 settings :
 	@echo COUNT: $(COUNT)
 	@echo DATA: $(DATA)
+	@echo SUMMARY: $(SUMMARY)
 	@echo RESULTS: $(RESULTS)
 	@echo COLLATE: $(COLLATE)
 	@echo PLOT: $(PLOT)
