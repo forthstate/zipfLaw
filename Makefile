@@ -1,22 +1,40 @@
-.PHONY : all clean settings
+.PHONY : all clean help settings
 
 COUNT=bin/countwords.py
 DATA=$(wildcard data/*.txt)
 RESULTS=$(patsubst data/%.txt,results/%.csv,$(DATA))
+COLLATE=bin/collate.py
+PLOT=bin/plotcounts.py
 
-# Regenerate all results.
-all : $(RESULTS)
+## all : regenerate all results.
+all : results/collated.png
 
-# Regenerate result for any book.
+## results/collated.png : plot the collated results
+results/collated.png : results/collated.csv
+	python $(PLOT) $< --outfile $@
+ 
+## results/collated.csv : collate all results
+results/collated.csv : $(RESULTS) $(COLLATE)
+	mkdir -p results
+	python $(COLLATE) $(RESULTS) > $@ 
+
+## results/%.csv : regenerate result for any book.
 results/%.csv : data/%.txt $(COUNT)
 	python $(COUNT) $< > $@
 
-# Remove all generated files.
+## clean : remove all generated files.
 clean :
-	rm -f results/*.csv
+	rm $(RESULTS) results/collated.csv results/collated.png
 
-# Show variables' values.
+## settings : show variables' values.
 settings :
 	@echo COUNT: $(COUNT)
 	@echo DATA: $(DATA)
 	@echo RESULTS: $(RESULTS)
+	@echo COLLATE: $(COLLATE)
+	@echo PLOT: $(PLOT)
+
+## help : show this message.
+help :
+	@grep '^##' ./Makefile
+	
