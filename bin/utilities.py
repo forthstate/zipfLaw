@@ -3,6 +3,10 @@
 import sys
 import csv
 
+ERRORS = {
+         'not_csv_suffix' : '{fname}: File must end in .csv', 
+         }
+
 
 def collection_to_csv(collection, num=None):
     """
