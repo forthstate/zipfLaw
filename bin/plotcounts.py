@@ -9,14 +9,14 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize_scalar
 
-
+#------------------------------------------------------------
 def nlog_likelihood(beta, counts):
     """Log-likelihood function."""
     likelihood = - np.sum(np.log((1/counts)**(beta - 1)
                           - (1/(counts + 1))**(beta - 1)))
     return likelihood
 
-
+#------------------------------------------------------------
 def get_power_law_params(word_counts):
     """
     Get the power law parameters.
@@ -44,6 +44,7 @@ def get_power_law_params(word_counts):
     alpha = 1 / (beta - 1)
     return alpha
 
+#-----------------------------------------------------------------
 def set_plot_params(param_file):
     """Set matplotlib parameters."""
     if param_file:
@@ -54,7 +55,7 @@ def set_plot_params(param_file):
     for param, value in param_dict.items():
         mpl.rcParams[param] = value
 
-
+#-----------------------------------------------------------------
 def plot_fit(curve_xmin, curve_xmax, max_rank, alpha, ax):
     """
     Plot the power law curve that was fitted to the data.
@@ -76,9 +77,35 @@ def plot_fit(curve_xmin, curve_xmax, max_rank, alpha, ax):
     yvals = max_rank * (xvals**(-1 / alpha))
     ax.loglog(xvals, yvals, color='grey')
 
+#-----------------------------------------------------------------
+def parse_command_line():
+    """
+    Parse the command line for input arguments
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('infile', type=argparse.FileType('r'),
+                        nargs='?', default='-',
+                        help='Word count csv file name')
+    parser.add_argument('--outfile', type=str,
+                        default='plotcounts.png',
+                        help='Output image file name')
+    parser.add_argument('--xlim', type=float, nargs=2,
+                        metavar=('XMIN', 'XMAX'),
+                        default=None, help='X-axis limits')
+    parser.add_argument('--plotparams', type=str,
+                        default=None,
+                        help='matplotlib parameters (YAML file)')
+    parser.add_argument('--style', type=str, nargs='*',
+                         choices=plt.style.available,
+                         default=None, help='matplotlib style')
+    args = parser.parse_args()
+    return args
 
-def main(args):
+#-----------------------------------------------------------------
+def main():
     """Run the command line program."""
+    args = parse_command_line()
+    
     if args.style:
         plt.style.use(args.style)
     set_plot_params(args.plotparams)
@@ -110,21 +137,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('infile', type=argparse.FileType('r'),
-                        nargs='?', default='-',
-                        help='Word count csv file name')
-    parser.add_argument('--outfile', type=str,
-                        default='plotcounts.png',
-                        help='Output image file name')
-    parser.add_argument('--xlim', type=float, nargs=2,
-                        metavar=('XMIN', 'XMAX'),
-                        default=None, help='X-axis limits')
-    parser.add_argument('--plotparams', type=str,
-                        default=None,
-                        help='matplotlib parameters (YAML file)')
-    parser.add_argument('--style', type=str, nargs='*',
-                         choices=plt.style.available,
-                         default=None, help='matplotlib style')
-    args = parser.parse_args()
-    main(args)
+    main()

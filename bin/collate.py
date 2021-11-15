@@ -31,10 +31,32 @@ def process_file(fname, word_counts):
         update_counts(reader, word_counts)
 
 #------------------------------------------------------------
-def main(args):
+def parse_command_line():
+    """
+    Parse command line for input arguments.
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('infiles', type=str, nargs='*',
+                        help='Input file names')
+    parser.add_argument('-n', '--num',
+                        type=int, default=None,
+                        help='Output n most frequent words')
+    parser.add_argument('-v', '--verbose',
+                        action="store_true", default=False,
+                        help="change logging level to DEBUG")
+    parser.add_argument('-l', '--logfile',
+                        type=str, default='collate.log',
+                        help='Name of the log file')
+    args = parser.parse_args()
+    return args
+
+#------------------------------------------------------------
+def main():
     """
     Run the command line program.
     """
+    args = parse_command_line()
+    
     log_level = logging.DEBUG if args.verbose else logging.WARNING
     logging.basicConfig(level=log_level, filename=args.logfile)
 
@@ -58,17 +80,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('infiles', type=str, nargs='*',
-                        help='Input file names')
-    parser.add_argument('-n', '--num',
-                        type=int, default=None,
-                        help='Output n most frequent words')
-    parser.add_argument('-v', '--verbose',
-                        action="store_true", default=False,
-                        help="change logging level to DEBUG")
-    parser.add_argument('-l', '--logfile',
-                        type=str, default='collate.log',
-                        help='Name of the log file')
-    args = parser.parse_args()
-    main(args)
+    main()
