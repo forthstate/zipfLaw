@@ -1,18 +1,18 @@
 from setuptools import setup
 
 setup(
-     name='py_zipf',
-     version='0.1',
-     author='forthstate'
-     packages=['py_zipf'],
+     name='zipfLaw',
+     version='0.1.0',
+     author='forthstate',
+     packages=['zipfLaw'],
      install_requires=[
-          'matplotlib',
-          'pandas',
-          'scipy',
-          'pyyaml',
-          'pytest'],
-      entry_points={
+        'matplotlib',
+        'pandas',
+        'scipy',
+        'pyyaml',
+        'pytest'],
+     entry_points={
         'console_scripts': [
-            'countwords = pyzipf.countwords:main',
-            'collate = pyzipf.collate:main',
-            'plotcounts = pyzipf.plotcounts:main']})
+            'countwords = zipfLaw.countwords:main',
+            'collate = zipfLaw.collate:main',
+            'plotcounts = zipfLaw.plotcounts:main']})
