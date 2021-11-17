@@ -11,7 +11,15 @@ The software requirements for the analyses is provided in the `requirements.txt`
 ```
 git clone https://github.com/forthstate/zipfLaw.git
 cd zipfLaw
+```
+Creation of a virtual environment is advised:
+```
 conda create -f environment.yml
+```
+  **OR**   
+just install the requirements:
+```
+pip install -r requirements.txt
 ```
 - Data : Some ebooks are already available in the `data` folder, which also has a markdown file with instructions on how to ge them.
 
